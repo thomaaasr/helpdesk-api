@@ -5,7 +5,11 @@ description = "API de chamados de TI com FastAPI"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "alembic>=1.20.1",
     "fastapi[standard]>=0.162.0",
+    "psycopg[binary]>=3.3.8",
+    "pydantic-settings>=2.16.2",
+    "sqlalchemy>=2.1.8",
 ]
 
 [dependency-groups]
@@ -17,6 +21,9 @@ dev = [
 
 [tool.ruff]
 line-length = 120
+
+# Código gerado pelo Alembic.
+extend-exclude = ["migrations"]
 
 [tool.ruff.lint]
 # E/F: erros básicos, I: ordem dos imports, B: armadilhas comuns, UP: sintaxe moderna do Python
