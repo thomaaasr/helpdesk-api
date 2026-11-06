@@ -8,5 +8,8 @@ class Configuracoes(BaseSettings):
     database_url: str
     database_url_teste: str | None = None
 
+    jwt_secret: str
+    jwt_expira_minutos: int = 60
+
 
 configuracoes = Configuracoes()

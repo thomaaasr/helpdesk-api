@@ -2,13 +2,13 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.auth.esquemas import UsuarioResumo
 from app.chamados.modelos import Prioridade, StatusChamado
 
 
 class ChamadoCriar(BaseModel):
     titulo: str = Field(min_length=3, max_length=120)
     descricao: str = Field(min_length=1)
-    solicitante: str = Field(min_length=1, max_length=120)
     prioridade: Prioridade = Prioridade.MEDIA
 
 
@@ -25,7 +25,7 @@ class ChamadoResposta(BaseModel):
     id: int
     titulo: str
     descricao: str
-    solicitante: str
+    solicitante: UsuarioResumo
     prioridade: Prioridade
     status: StatusChamado
     criado_em: datetime

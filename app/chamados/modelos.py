@@ -1,9 +1,10 @@
 from datetime import datetime
 from enum import StrEnum
 
-from sqlalchemy import DateTime, Enum, String, Text, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, Enum, ForeignKey, String, Text, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.auth.modelos import Usuario
 from app.banco import Base
 
 
@@ -31,7 +32,7 @@ class Chamado(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     titulo: Mapped[str] = mapped_column(String(120))
     descricao: Mapped[str] = mapped_column(Text)
-    solicitante: Mapped[str] = mapped_column(String(120))
+    solicitante_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id", name="fk_chamados_solicitante_id"))
     prioridade: Mapped[Prioridade] = mapped_column(
         Enum(Prioridade, name="prioridade", values_callable=_valores), default=Prioridade.MEDIA
     )
@@ -42,3 +43,5 @@ class Chamado(Base):
     atualizado_em: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
+    # lazy="joined": traz o solicitante na mesma consulta do chamado.
+    solicitante: Mapped[Usuario] = relationship(lazy="joined")

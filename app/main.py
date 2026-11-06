@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from app.auth.rotas import rotas as rotas_auth
 from app.chamados.rotas import rotas as rotas_chamados
 
 app = FastAPI(
@@ -8,6 +9,7 @@ app = FastAPI(
     version="0.1.0",
 )
 
+app.include_router(rotas_auth)
 app.include_router(rotas_chamados)
 
 
