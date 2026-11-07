@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+
+    # PostgreSQL temporário para os testes; o GitHub liga antes e descarta no final.
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: helpdesk_teste
+        ports:
+          - 5432:5432
+        # Só começa os testes quando o banco estiver pronto para receber conexões.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/helpdesk_teste
+      DATABASE_URL_TESTE: postgresql+psycopg://postgres:postgres@localhost:5432/helpdesk_teste
+      JWT_SECRET: segredo-usado-somente-no-ci-com-mais-de-32-bytes
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      # Confere se as migrações rodam e se batem com os modelos.
+      - run: uv run alembic upgrade head
+      - run: uv run alembic check
+      - run: uv run alembic downgrade base
+      - run: uv run pytest
+      - run: docker build -t helpdesk-api .

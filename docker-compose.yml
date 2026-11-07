@@ -1,0 +1,27 @@
+services:
+  banco:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: helpdesk
+    volumes:
+      - dados-banco:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d helpdesk"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@banco:5432/helpdesk
+      JWT_SECRET: ${JWT_SECRET:-segredo-somente-para-rodar-localmente-com-docker}
+    depends_on:
+      banco:
+        condition: service_healthy
+
+volumes:
+  dados-banco:
