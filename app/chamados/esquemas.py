@@ -19,6 +19,10 @@ class ChamadoAtualizar(BaseModel):
     prioridade: Prioridade | None = None
 
 
+class StatusAlterar(BaseModel):
+    status: StatusChamado
+
+
 class ChamadoResposta(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -26,8 +30,12 @@ class ChamadoResposta(BaseModel):
     titulo: str
     descricao: str
     solicitante: UsuarioResumo
+    tecnico: UsuarioResumo | None
     prioridade: Prioridade
     status: StatusChamado
+    prazo_em: datetime
+    resolvido_em: datetime | None
+    sla_estourado: bool
     criado_em: datetime
     atualizado_em: datetime
 
@@ -37,3 +45,16 @@ class PaginaChamados(BaseModel):
     total: int
     pagina: int
     limite: int
+
+
+class ComentarioCriar(BaseModel):
+    texto: str = Field(min_length=1, max_length=2000)
+
+
+class ComentarioResposta(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    texto: str
+    autor: UsuarioResumo
+    criado_em: datetime
