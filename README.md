@@ -2,6 +2,8 @@
 
 ![CI](https://github.com/thomaaasr/helpdesk-api/actions/workflows/ci.yml/badge.svg)
 
+**Demo:** [helpdesk-api-ii2o.onrender.com/docs](https://helpdesk-api-ii2o.onrender.com/docs) (a primeira chamada pode levar cerca de 1 minuto, porque o servidor gratuito dorme quando fica parado)
+
 API REST de chamados de TI, feita com **Python e FastAPI**. Controla o ciclo completo de um chamado: abertura, atendimento por um técnico, comentários, prazo de SLA conforme a prioridade e fechamento.
 
 ## Tecnologias
